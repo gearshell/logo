@@ -12,7 +12,7 @@ import (
 	"github.com/dolmen-go/kittyimg"
 )
 
-//go:embed logo.jpeg
+//go:embed 160.png
 var logo []byte
 
 func Image() image.Image {
