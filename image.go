@@ -39,17 +39,15 @@ func RenderWithSize(width, height int) string {
 	return img
 }
 
-// RenderImage reads an image from r and returns Kitty protocol output.
 func RenderImage(r io.Reader) (string, error) {
-	var buf bytes.Buffer
-	if err := kittyimg.Transcode(&buf, r); err != nil {
+	src, _, err := image.Decode(r)
+	if err != nil {
 		return "", err
 	}
-	return buf.String(), nil
+
+	return encode(fillTransparentBlack(src))
 }
 
-// RenderImageResized reads an image from r, resizes it to the given dimensions,
-// and returns Kitty protocol output.
 func RenderImageResized(r io.Reader, width, height int) (string, error) {
 	src, _, err := image.Decode(r)
 	if err != nil {
@@ -59,8 +57,12 @@ func RenderImageResized(r io.Reader, width, height int) (string, error) {
 	dst := image.NewRGBA(image.Rect(0, 0, width, height))
 	draw.ApproxBiLinear.Scale(dst, dst.Bounds(), src, src.Bounds(), draw.Over, nil)
 
+	return encode(fillTransparentBlack(dst))
+}
+
+func encode(img image.Image) (string, error) {
 	var imgBuf bytes.Buffer
-	if err := png.Encode(&imgBuf, dst); err != nil {
+	if err := png.Encode(&imgBuf, img); err != nil {
 		return "", err
 	}
 
