@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	size := flag.String("size", "160x160", "resize image to given dimensions (e.g. 160x160)")
+	size := flag.String("size", "240x240", "resize image to given dimensions (e.g. 160x160)")
 	flag.Parse()
 
 	if *size == "" {
