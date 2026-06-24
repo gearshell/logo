@@ -57,7 +57,7 @@ func RenderImageResized(r io.Reader, width, height int) (string, error) {
 	}
 
 	dst := image.NewRGBA(image.Rect(0, 0, width, height))
-	draw.NearestNeighbor.Scale(dst, dst.Bounds(), src, src.Bounds(), draw.Over, nil)
+	draw.ApproxBiLinear.Scale(dst, dst.Bounds(), src, src.Bounds(), draw.Over, nil)
 
 	var imgBuf bytes.Buffer
 	if err := png.Encode(&imgBuf, dst); err != nil {
